@@ -1,9 +1,8 @@
 // index.js
 const express = require('express');
 const mongoose = require('mongoose');
-const XLSX = require('xlsx');
 const rules = require('./models/rules');
-const fs = require('fs');
+const cargarDatosDesdeExcel = require('./services/files.service');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,8 +10,6 @@ const PORT = process.env.PORT || 3000;
 mongoose.connect('mongodb://127.0.0.1:27017/db-surgir')
     .then(() => {
         console.log('Conectado a la base de datos');
-        // Cargar datos desde el archivo Excel e insertar en MongoDB
-        
     })
     .catch(error => {
         console.error('Error al conectar a la base de datos:', error);

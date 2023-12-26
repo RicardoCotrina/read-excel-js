@@ -1,5 +1,9 @@
+const fs = require('fs');
+const XLSX = require('xlsx');
+const rules = require('../models/rules');
+
 // Función para cargar datos desde el archivo Excel e insertar en MongoDB
-export const cargarDatosDesdeExcel = async (rutaArchivo) => {
+const cargarDatosDesdeExcel = async (rutaArchivo) => {
     const workbook = XLSX.readFile(rutaArchivo);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
@@ -85,4 +89,6 @@ export const cargarDatosDesdeExcel = async (rutaArchivo) => {
         .catch(error => {
             console.error('Error al insertar datos en MongoDB:', error);
         });
-}
+};
+
+module.exports = cargarDatosDesdeExcel;
