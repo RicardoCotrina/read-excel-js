@@ -2,7 +2,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const rules = require('./models/rules');
-const cargarDatosDesdeExcel = require('./services/files.service');
+const loadDataRangeRate = require('./services/rangeRate.service');
+const loadDataAutonomyRate = require('./services/autonomyRate.service');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,7 +21,13 @@ app.use(express.json());
 
 app.post('/api/rules', async(req, res) => {
     try {
-        await cargarDatosDesdeExcel('files/rulesv3.xlsx');;
+        const { body } = req;
+        const { fileName } = body;
+        if(fileName === 'rangeRateRules-v3') {
+            await loadDataRangeRate(`files/${fileName}.xlsx`);
+        } else if(fileName === 'autonomyRateRules-v7') {
+            await loadDataAutonomyRate(`files/${fileName}.xlsx`);
+        }
         res.json({
             status: true,
             data: []
