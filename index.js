@@ -20,7 +20,7 @@ app.use(express.json());
 
 app.post('/api/rules', async(req, res) => {
     try {
-        await cargarDatosDesdeExcel('files/rules.xlsx');;
+        await cargarDatosDesdeExcel('files/rulesv3.xlsx');;
         res.json({
             status: true,
             data: []

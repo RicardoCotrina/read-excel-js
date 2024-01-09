@@ -11,13 +11,14 @@ const cargarDatosDesdeExcel = async (rutaArchivo) => {
 
     console.log(`data = ${JSON.stringify(data)}`);
 
-    const rulesTotal = data.map(row => {
+    const rulesTotal = data.map((row, index) => {
+        console.log('INDICE = ', index)
         const montoCCA = row['MONTO CCA'] === 'ANYVALUE' ? 'ANY' : (row['MONTO CCA'].toString().indexOf('between') !== -1) ? 'BETWEEN' : '>=';
         console.log(`montoCCA = ${montoCCA}`);
         if (montoCCA === 'ANY') {
             return {
                 conditions: [
-                    { name: 'PRODUCTO_CAA', operator: '=', value: row['PRODUCTO CCA'] },
+                    { name: 'PRODUCTO_CCA', operator: '=', value: row['PRODUCTO CCA'] },
                     { name: 'ZONA', operator: row['ZONA'] === 'ANYVALUE' ? 'ANY' : '=', value: row['ZONA'] },
                     { name: 'RIESGO', operator: row['RIESGO'] === 'ANYVALUE' ? 'ANY' : '=', value: row['RIESGO'] },
                     { name: 'MONTO_CCA', operator: 'ANY', value: row['MONTO CCA'] },
@@ -32,7 +33,7 @@ const cargarDatosDesdeExcel = async (rutaArchivo) => {
         } else if (montoCCA === 'BETWEEN') {
             return {
                 conditions: [
-                    { name: 'PRODUCTO_CAA', operator: '=', value: row['PRODUCTO CCA'] },
+                    { name: 'PRODUCTO_CCA', operator: '=', value: row['PRODUCTO CCA'] },
                     { name: 'ZONA', operator: row['ZONA'] === 'ANYVALUE' ? 'ANY' : '=', value: row['ZONA'] },
                     { name: 'RIESGO', operator: row['RIESGO'] === 'ANYVALUE' ? 'ANY' : '=', value: row['RIESGO'] },
                     { name: 'MONTO_CCA', operator: 'BETWEEN', begin: (row['MONTO CCA'].toString().match(/\d+(\.\d+)?/g))[0], end: (row['MONTO CCA'].toString().match(/\d+(\.\d+)?/g))[1] },
@@ -47,7 +48,7 @@ const cargarDatosDesdeExcel = async (rutaArchivo) => {
         } else if (montoCCA === '>=') {
             return {
                 conditions: [
-                    { name: 'PRODUCTO_CAA', operator: '=', value: row['PRODUCTO CCA'] },
+                    { name: 'PRODUCTO_CCA', operator: '=', value: row['PRODUCTO CCA'] },
                     { name: 'ZONA', operator: row['ZONA'] === 'ANYVALUE' ? 'ANY' : '=', value: row['ZONA'] },
                     { name: 'RIESGO', operator: row['RIESGO'] === 'ANYVALUE' ? 'ANY' : '=', value: row['RIESGO'] },
                     { name: 'MONTO_CCA', operator: '>=', value: (row['MONTO CCA'].toString().match(/\d+(\.\d+)?/g))[0] },
@@ -66,7 +67,7 @@ const cargarDatosDesdeExcel = async (rutaArchivo) => {
         name: 'RuleTasaRango',
         description: 'Reglas de rango de tasas',
         variables: [
-            { name: 'PRODUCTO_CAA', type: 'CHR', isOutput: false },
+            { name: 'PRODUCTO_CCA', type: 'CHR', isOutput: false },
             { name: 'ZONA', type: 'INT', isOutput: false },
             { name: 'RIESGO', type: 'CHR', isOutput: false },
             { name: 'MONTO_CCA', type: 'FLT', isOutput: false },
