@@ -83,13 +83,13 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
     fs.writeFileSync('output/scriptInsertRangeRateRules.json', jsonData);
 
     // Insertar los datos en la colección de MongoDB
-    rules.insertMany(resultArray)
-        .then(() => {
-            console.log('Datos insertados correctamente en la colección');
-        })
-        .catch(error => {
-            console.error('Error al insertar datos en MongoDB:', error);
-        });
+    // rules.insertMany(resultArray)
+    //     .then(() => {
+    //         console.log('Datos insertados correctamente en la colección');
+    //     })
+    //     .catch(error => {
+    //         console.error('Error al insertar datos en MongoDB:', error);
+    //     });
 };
 
 module.exports = loadDataRangeRateRules;

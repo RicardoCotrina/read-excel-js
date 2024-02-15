@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const rules = require('./models/rules');
 const loadDataRangeRate = require('./services/rangeRate.service');
 const loadDataAutonomyRate = require('./services/autonomyRate.service');
+const loadDataRtaRateRules = require('./services/rtaRate.service');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,14 +20,16 @@ mongoose.connect('mongodb://127.0.0.1:27017/db-surgir')
 // Middleware para manejar el cuerpo de las solicitudes JSON
 app.use(express.json());
 
-app.post('/api/rules', async(req, res) => {
+app.post('/api/rules', async (req, res) => {
     try {
         const { body } = req;
         const { fileName } = body;
-        if(fileName === 'rangeRateRules-v3') {
+        if (fileName === 'rangeRateRules-v10') {
             await loadDataRangeRate(`files/${fileName}.xlsx`);
-        } else if(fileName === 'autonomyRateRules-v7') {
+        } else if (fileName === 'autonomyRateRules-v12') {
             await loadDataAutonomyRate(`files/${fileName}.xlsx`);
+        } else if (fileName === 'rtaRate-v8') {
+            await loadDataRtaRateRules(`files/${fileName}.xlsx`);
         }
         res.json({
             status: true,
