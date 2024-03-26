@@ -57,7 +57,7 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
     });
 
     const arrayTasaAppCondition = data.map((row, index) => {
-        const operatorTasaApp = row['TASA APP'] === 'ANYVALUE' ? 'ANY' : (row['TASA APP'].toString().toLowerCase().indexOf('between') !== -1) ? 'BETWEEN' : (row['TASA APP'].toString().indexOf('<>') !== -1) ? '<>' : '=';
+        const operatorTasaApp = row['TASA APP'] === 'ANYVALUE' ? 'ANY' : (row['TASA APP'].toString().toLowerCase().indexOf('between') !== -1) ? 'BETWEEN' : (row['TASA APP'].toString().indexOf('<>') !== -1) ? '<>' : (row['TASA APP'].toString().indexOf('<') !== -1) ? '<' : (row['TASA APP'].toString().indexOf('>') !== -1) ? '>' : ' =';
         let tasaAppCondition = '';
         console.log(`Indice = ${index} - tasaApp = ${operatorTasaApp}`);
         if (operatorTasaApp === 'ANY') {
@@ -68,7 +68,7 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
             tasaAppCondition = {
                 name: 'TASA_APP', operator: operatorTasaApp, begin: Number((row['TASA APP'].toString().match(/\d+(\.\d+)?/g))[0]), end: Number((row['TASA APP'].toString().match(/\d+(\.\d+)?/g))[1])
             }
-        } else if (operatorTasaApp === '<>' || operatorTasaApp === '=') {
+        } else if (operatorTasaApp === '<>' || operatorTasaApp === '=' || operatorTasaApp === '<') {
             tasaAppCondition = {
                 name: 'TASA_APP', operator: operatorTasaApp, value: Number(row['TASA APP'].toString().match(/\d+(\.\d+)?/g)[0])
             }
@@ -99,14 +99,14 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
     const jsonData = JSON.stringify(resultArray, null, 2);
     fs.writeFileSync('output/scriptInsertAutonomyRateRules.json', jsonData);
 
-    // // Insertar los datos en la colección de MongoDB
-    // rules.insertMany(resultArray)
-    //     .then(() => {
-    //         console.log('Datos insertados correctamente en la colección');
-    //     })
-    //     .catch(error => {
-    //         console.error('Error al insertar datos en MongoDB:', error);
-    //     });
+    // Insertar los datos en la colección de MongoDB
+    rules.insertMany(resultArray)
+        .then(() => {
+            console.log('Datos insertados correctamente en la colección');
+        })
+        .catch(error => {
+            console.error('Error al insertar datos en MongoDB:', error);
+        });
 };
 
 module.exports = loadDataAutonomyRateRules;
