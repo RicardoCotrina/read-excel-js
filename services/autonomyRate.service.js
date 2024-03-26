@@ -1,6 +1,6 @@
 const fs = require('fs');
 const XLSX = require('xlsx');
-const rules = require('../models/rules');
+const Rule = require('../models/rules');
 
 // Función para cargar datos desde el archivo Excel e insertar en MongoDB
 const loadDataAutonomyRateRules = async (rutaArchivo) => {
@@ -9,11 +9,8 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
     const worksheet = workbook.Sheets[sheetName];
     const data = XLSX.utils.sheet_to_json(worksheet);
 
-    console.log(`data = ${JSON.stringify(data)}`);
-
     const rulesTotalWithoutTasaApp = data.map((row, index) => {
         const operatorMontoCCA = row['MONTO CCA'] === 'ANYVALUE' ? 'ANY' : (row['MONTO CCA'].toString().toLowerCase().indexOf('between') !== -1) ? 'BETWEEN' : '>=';
-        console.log(`Indice = ${index} - operatorMontoCCA = ${operatorMontoCCA}`);
         if (operatorMontoCCA === 'ANY') {
             return {
                 conditions: [
@@ -59,7 +56,6 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
     const arrayTasaAppCondition = data.map((row, index) => {
         const operatorTasaApp = row['TASA APP'] === 'ANYVALUE' ? 'ANY' : (row['TASA APP'].toString().toLowerCase().indexOf('between') !== -1) ? 'BETWEEN' : (row['TASA APP'].toString().indexOf('<>') !== -1) ? '<>' : (row['TASA APP'].toString().indexOf('<') !== -1) ? '<' : (row['TASA APP'].toString().indexOf('>') !== -1) ? '>' : ' =';
         let tasaAppCondition = '';
-        console.log(`Indice = ${index} - tasaApp = ${operatorTasaApp}`);
         if (operatorTasaApp === 'ANY') {
             tasaAppCondition = {
                 name: 'TASA_APP', operator: operatorTasaApp, value: 0
@@ -97,16 +93,17 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
     }
 
     const jsonData = JSON.stringify(resultArray, null, 2);
-    fs.writeFileSync('output/scriptInsertAutonomyRateRules.json', jsonData);
+
+    console.log(JSON.stringify(resultArray))
 
     // Insertar los datos en la colección de MongoDB
-    rules.insertMany(resultArray)
-        .then(() => {
-            console.log('Datos insertados correctamente en la colección');
-        })
-        .catch(error => {
-            console.error('Error al insertar datos en MongoDB:', error);
-        });
+    await Rule.insertMany(resultArray);
+
+    //console.log(await Rule.find());
+
+    fs.writeFileSync('output/scriptInsertAutonomyRateRules.json', jsonData);
+
+    return resultArray;
 };
 
 module.exports = loadDataAutonomyRateRules;

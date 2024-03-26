@@ -33,6 +33,6 @@ const rulesSchema = new Schema({
     rules: [ruleSchema]
 });
 
-const rules = model('Rule', rulesSchema);
+const Rule = model('Rule', rulesSchema);
 
-module.exports = rules;
+module.exports = Rule;

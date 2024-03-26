@@ -1,6 +1,6 @@
 const fs = require('fs');
 const XLSX = require('xlsx');
-const rules = require('../models/rules');
+const Rule = require('../models/rules');
 
 // Función para cargar datos desde el archivo Excel e insertar en MongoDB
 const loadDataRangeRateRules = async (rutaArchivo) => {
@@ -9,12 +9,8 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
     const worksheet = workbook.Sheets[sheetName];
     const data = XLSX.utils.sheet_to_json(worksheet);
 
-    console.log(`data = ${JSON.stringify(data)}`);
-
     const rulesTotal = data.map((row, index) => {
-        console.log('INDICE = ', index)
         const montoCCA = row['MONTO CCA'] === 'ANYVALUE' ? 'ANY' : (row['MONTO CCA'].toString().indexOf('between') !== -1) ? 'BETWEEN' : '>=';
-        console.log(`montoCCA = ${montoCCA}`);
         if (montoCCA === 'ANY') {
             return {
                 conditions: [
@@ -80,16 +76,12 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
     }
 
     const jsonData = JSON.stringify(resultArray, null, 2);
-    fs.writeFileSync('output/scriptInsertRangeRateRules.json', jsonData);
 
     // Insertar los datos en la colección de MongoDB
-    // rules.insertMany(resultArray)
-    //     .then(() => {
-    //         console.log('Datos insertados correctamente en la colección');
-    //     })
-    //     .catch(error => {
-    //         console.error('Error al insertar datos en MongoDB:', error);
-    //     });
+    await Rule.insertMany(resultArray);
+
+    fs.writeFileSync('output/scriptInsertRangeRateRules.json', jsonData);
+    return resultArray;
 };
 
 module.exports = loadDataRangeRateRules;
