@@ -56,6 +56,7 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
     const arrayTasaAppCondition = data.map((row, index) => {
         const operatorTasaApp = row['TASA APP'] === 'ANYVALUE' ? 'ANY' : (row['TASA APP'].toString().toLowerCase().indexOf('between') !== -1) ? 'BETWEEN' : (row['TASA APP'].toString().indexOf('<>') !== -1) ? '<>' : (row['TASA APP'].toString().indexOf('<') !== -1) ? '<' : (row['TASA APP'].toString().indexOf('>') !== -1) ? '>' : ' =';
         let tasaAppCondition = '';
+        console.log(`${index} : operatorTasaApp = ${operatorTasaApp}`)
         if (operatorTasaApp === 'ANY') {
             tasaAppCondition = {
                 name: 'TASA_APP', operator: operatorTasaApp, value: 0
