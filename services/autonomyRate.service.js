@@ -64,9 +64,13 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
             tasaAppCondition = {
                 name: 'TASA_APP', operator: operatorTasaApp, begin: Number((row['TASA APP'].toString().match(/\d+(\.\d+)?/g))[0]), end: Number((row['TASA APP'].toString().match(/\d+(\.\d+)?/g))[1])
             }
-        } else if (operatorTasaApp === '<>' || operatorTasaApp === '=' || operatorTasaApp === '<') {
+        } else if (operatorTasaApp === '<>' || operatorTasaApp === '<' || operatorTasaApp === '>') {
             tasaAppCondition = {
                 name: 'TASA_APP', operator: operatorTasaApp, value: Number(row['TASA APP'].toString().match(/\d+(\.\d+)?/g)[0])
+            }
+        } else {
+            tasaAppCondition = {
+                name: 'TASA_APP', operator: '=', value: Number(row['TASA APP'].toString().match(/\d+(\.\d+)?/g)[0])
             }
         }
         return tasaAppCondition;
@@ -94,7 +98,11 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
 
     const jsonData = JSON.stringify(resultArray, null, 2);
 
-    console.log(JSON.stringify(resultArray))
+    const ruleName = await Rule.findOne({ name: resultArray.name }).select(['-_id', '-__v']);;
+
+    if (ruleName) {
+        return ruleName;
+    }
 
     // Insertar los datos en la colección de MongoDB
     await Rule.insertMany(resultArray);

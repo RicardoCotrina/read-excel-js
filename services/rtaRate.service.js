@@ -71,7 +71,7 @@ const loadDataRtaRateRules = async (rutaArchivo) => {
 
     const jsonData = JSON.stringify(resultArray, null, 2);
 
-    const ruleName = await Rule.findOne({ name: resultArray.name });
+    const ruleName = await Rule.findOne({ name: resultArray.name }).select(['-_id', '-__v']);
 
     if (ruleName) {
         return ruleName;

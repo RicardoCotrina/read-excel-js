@@ -77,6 +77,12 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
 
     const jsonData = JSON.stringify(resultArray, null, 2);
 
+    const ruleName = await Rule.findOne({ name: resultArray.name }).select(['-_id', '-__v']);
+
+    if (ruleName) {
+        return ruleName;
+    }
+
     // Insertar los datos en la colección de MongoDB
     await Rule.insertMany(resultArray);
 
