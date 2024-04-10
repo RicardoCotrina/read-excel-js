@@ -4,12 +4,12 @@ Servicio que permite leer documentos excel, para poder generar archivos JSON que
 ## PRIMERA CONSIDERACIÓN
 En la primera fila solo debe existir los campos de las cabeceras del excel.
 
-![alt text](image.png)
+![alt text](public/images/cabeceras_formato.png)
 
 ## SEGUNDA CONSIDERACIÓN
 Los nombres de la cabecera no deben contener guín abajo ( ```_``` ) sino estar siempre con espacios.
 
-![alt text](image-1.png)
+![alt text](public/images/cabeceras_example.png)
 
 ## TERCERA CONSIDERACIÓN
 Copiar el archivo ```.env.example``` a ```.env```.
