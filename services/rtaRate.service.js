@@ -71,14 +71,14 @@ const loadDataRtaRateRules = async (rutaArchivo) => {
 
     const jsonData = JSON.stringify(resultArray, null, 2);
 
-    const ruleName = await Rule.findOne({ name: resultArray.name }).select(['-_id', '-__v']);
+    //const ruleName = await Rule.findOne({ name: resultArray.name }).select(['-_id', '-__v']);
 
-    if (ruleName) {
-        return ruleName;
-    }
+    // if (ruleName) {
+    //     return ruleName;
+    // }
 
     // Insertar los datos en la colección de MongoDB
-    await Rule.insertMany(resultArray);
+    //await Rule.insertMany(resultArray);
 
     fs.writeFileSync('output/scriptInsertRtaRateRules.json', jsonData);
     return resultArray;

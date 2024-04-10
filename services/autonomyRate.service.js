@@ -11,6 +11,7 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
 
     const rulesTotalWithoutTasaApp = data.map((row, index) => {
         const operatorMontoCCA = row['MONTO CCA'] === 'ANYVALUE' ? 'ANY' : (row['MONTO CCA'].toString().toLowerCase().indexOf('between') !== -1) ? 'BETWEEN' : '>=';
+        const operatorPlazo = row['PLAZO'] === 'ANYVALUE' ? 'ANY' : (row['PLAZO'].toString().indexOf('<') !== -1) ? '<' : (row['PLAZO'].toString().indexOf('>=') !== -1) ? '>=' : (row['PLAZO'].toString().indexOf('<=') !== -1) ? '<=' : '>';
         if (operatorMontoCCA === 'ANY') {
             return {
                 conditions: [
@@ -18,7 +19,7 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
                     { name: 'ZONA_COMERCIAL', operator: row['ZONA COMERCIAL'] === 'ANYVALUE' ? 'ANY' : '=', value: row['ZONA COMERCIAL'] === 'ANYVALUE' ? 0 : Number(row['ZONA COMERCIAL']) },
                     { name: 'RIESGO', operator: row['RIESGO'] === 'ANYVALUE' ? 'ANY' : '=', value: row['RIESGO'] === 'ANYVALUE' ? '' : row['RIESGO'] },
                     { name: 'MONTO_CCA', operator: operatorMontoCCA, value: 0 },
-                    { name: 'PLAZO', operator: 'ANY', value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO']) }
+                    { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
                     { name: 'RESULTADO_CMA', value: Number(row['RESULTADO CMA']) }
@@ -31,7 +32,7 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
                     { name: 'ZONA_COMERCIAL', operator: row['ZONA COMERCIAL'] === 'ANYVALUE' ? 'ANY' : '=', value: row['ZONA COMERCIAL'] === 'ANYVALUE' ? 0 : Number(row['ZONA COMERCIAL']) },
                     { name: 'RIESGO', operator: row['RIESGO'] === 'ANYVALUE' ? 'ANY' : '=', value: row['RIESGO'] === 'ANYVALUE' ? '' : row['RIESGO'] },
                     { name: 'MONTO_CCA', operator: operatorMontoCCA, begin: Number((row['MONTO CCA'].toString().match(/\d+(\.\d+)?/g))[0]), end: Number((row['MONTO CCA'].toString().match(/\d+(\.\d+)?/g))[1]) },
-                    { name: 'PLAZO', operator: 'ANY', value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO']) }
+                    { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
                     { name: 'RESULTADO_CMA', value: Number(row['RESULTADO CMA']) }
@@ -44,7 +45,7 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
                     { name: 'ZONA_COMERCIAL', operator: row['ZONA COMERCIAL'] === 'ANYVALUE' ? 'ANY' : '=', value: row['ZONA COMERCIAL'] === 'ANYVALUE' ? 0 : Number(row['ZONA COMERCIAL']) },
                     { name: 'RIESGO', operator: row['RIESGO'] === 'ANYVALUE' ? 'ANY' : '=', value: row['RIESGO'] === 'ANYVALUE' ? '' : row['RIESGO'] },
                     { name: 'MONTO_CCA', operator: operatorMontoCCA, value: (row['MONTO CCA'].toString().match(/\d+(\.\d+)?/g))[0] },
-                    { name: 'PLAZO', operator: 'ANY', value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO']) }
+                    { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
                     { name: 'RESULTADO_CMA', value: Number(row['RESULTADO CMA']) }
@@ -99,14 +100,14 @@ const loadDataAutonomyRateRules = async (rutaArchivo) => {
 
     const jsonData = JSON.stringify(resultArray, null, 2);
 
-    const ruleName = await Rule.findOne({ name: resultArray.name }).select(['-_id', '-__v']);;
+    //const ruleName = await Rule.findOne({ name: resultArray.name }).select(['-_id', '-__v']);;
 
-    if (ruleName) {
-        return ruleName;
-    }
+    // if (ruleName) {
+    //     return ruleName;
+    // }
 
     // Insertar los datos en la colección de MongoDB
-    await Rule.insertMany(resultArray);
+    //await Rule.insertMany(resultArray);
 
     //console.log(await Rule.find());
 
