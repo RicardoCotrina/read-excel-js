@@ -89,7 +89,7 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
     //await Rule.insertMany(resultArray);
 
     fs.writeFileSync('output/scriptInsertRangeRateRules.json', jsonData);
-    return [];
+    return resultArray;
 };
 
 module.exports = loadDataRangeRateRules;
