@@ -27,9 +27,9 @@ app.post('/api/rules', async (req, res) => {
         let response = {};
         if (fileName === 'rangeRateRules-v11') {
             response = await loadDataRangeRate(`files/${fileName}.xlsx`);
-        } else if (fileName === 'autonomyRateRules-v13') {
+        } else if (fileName === 'autonomyRateRules-v14') {
             response = await loadDataAutonomyRate(`files/${fileName}.xlsx`);
-        } else if (fileName === 'rtaRate-v8') {
+        } else if (fileName === 'rtasRate-v10') {
             response = await loadDataRtaRateRules(`files/${fileName}.xlsx`);
         }
         res.json({

@@ -23,9 +23,9 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
                     { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
-                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA']) },
-                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO']) },
-                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA']) }
+                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA']).toFixed(2) },
+                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO']).toFixed(2) },
+                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA']).toFixed(2) }
                 ]
             }
         } else if (montoCCA === 'BETWEEN') {
@@ -38,9 +38,9 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
                     { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
-                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA']) },
-                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO']) },
-                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA']) }
+                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA']).toFixed(2) },
+                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO']).toFixed(2) },
+                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA']).toFixed(2) }
                 ]
             }
         } else if (montoCCA === '>=') {
@@ -53,9 +53,9 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
                     { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
-                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA']) },
-                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO']) },
-                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA']) }
+                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA']).toFixed(2) },
+                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO']).toFixed(2) },
+                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA']).toFixed(2) }
                 ]
             }
         }
