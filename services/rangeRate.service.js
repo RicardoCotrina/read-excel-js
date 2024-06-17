@@ -5,7 +5,7 @@ export const loadDataRangeRateRules = async (fileName) => {
     const rulesTotal = data.map((row, index) => {
         const montoCCA = row['MONTO CCA'] === 'ANYVALUE' ? 'ANY' : (row['MONTO CCA'].toString().indexOf('between') !== -1) ? 'BETWEEN' : '>=';
         const operatorPlazo = row['PLAZO'] === 'ANYVALUE' ? 'ANY' : (row['PLAZO'].toString().indexOf('<') !== -1) ? '<' : (row['PLAZO'].toString().indexOf('>=') !== -1) ? '>=' : (row['PLAZO'].toString().indexOf('<=') !== -1) ? '<=' : '>';
-        console.log(`operatorPlazo = ${operatorPlazo}`);
+
         if (montoCCA === 'ANY') {
             return {
                 conditions: [
