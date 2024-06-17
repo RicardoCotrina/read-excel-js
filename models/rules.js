@@ -1,5 +1,5 @@
 // models/tasaRango.js
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 const variableSchema = new Schema({
     name: String,
@@ -35,4 +35,4 @@ const rulesSchema = new Schema({
 
 const Rule = model('Rule', rulesSchema);
 
-module.exports = Rule;
+export default Rule;

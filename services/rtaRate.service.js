@@ -1,14 +1,7 @@
-const fs = require('fs');
-const XLSX = require('xlsx');
-const Rule = require('../models/rules');
+import { getDataByFile, generateScript } from '../utils/index.js';
 
-// Función para cargar datos desde el archivo Excel e insertar en MongoDB
-const loadDataRtaRateRules = async (rutaArchivo) => {
-    const workbook = XLSX.readFile(rutaArchivo);
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet);
-
+export const loadDataRtaRateRules = async (fileName) => {
+    const data = await getDataByFile(fileName);
     const rulesTotal = data.map((row, index) => {
 
         const montoCCA = row['MONTO CCA'] === 'ANYVALUE' ? 'ANY' : (row['MONTO CCA'].toLowerCase().toString().indexOf('between') !== -1) ? 'BETWEEN' : '>=';
@@ -71,17 +64,7 @@ const loadDataRtaRateRules = async (rutaArchivo) => {
 
     const jsonData = JSON.stringify(resultArray, null, 2);
 
-    //const ruleName = await Rule.findOne({ name: resultArray.name }).select(['-_id', '-__v']);
+    await generateScript(fileName, jsonData);
 
-    // if (ruleName) {
-    //     return ruleName;
-    // }
-
-    // Insertar los datos en la colección de MongoDB
-    //await Rule.insertMany(resultArray);
-
-    fs.writeFileSync('output/scriptInsertRtaRateRules.json', jsonData);
     return resultArray;
 };
-
-module.exports = loadDataRtaRateRules;

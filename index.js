@@ -1,36 +1,26 @@
 // index.js
-const express = require('express');
-const mongoose = require('mongoose');
-const rules = require('./models/rules');
-const loadDataRangeRate = require('./services/rangeRate.service');
-const loadDataAutonomyRate = require('./services/autonomyRate.service');
-const loadDataRtaRateRules = require('./services/rtaRate.service');
+import express, { json } from 'express';
+import { loadDataAutonomyRateRules, loadDataRangeRateRules, loadDataRtaRateRules } from './services/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-mongoose.connect('mongodb://127.0.0.1:27017/db-surgir')
-    .then(() => {
-        console.log('Conectado a la base de datos');
-    })
-    .catch(error => {
-        console.error('Error al conectar a la base de datos:', error);
-    });
-
-// Middleware para manejar el cuerpo de las solicitudes JSON
-app.use(express.json());
+app.use(json());
 
 app.post('/api/rules', async (req, res) => {
     try {
         const { body } = req;
         const { fileName } = body;
+
+        const fileNameFormat = fileName.replace('-', '_');
+
         let response = {};
-        if (fileName === 'rangeRateRules-v11') {
-            response = await loadDataRangeRate(`files/${fileName}.xlsx`);
-        } else if (fileName === 'autonomyRateRules-v14') {
-            response = await loadDataAutonomyRate(`files/${fileName}.xlsx`);
-        } else if (fileName === 'rtasRate-v10') {
-            response = await loadDataRtaRateRules(`files/${fileName}.xlsx`);
+        if (fileName.startsWith('rangeRateRules')) {
+            response = await loadDataRangeRateRules(fileNameFormat);
+        } else if (fileName.startsWith('autonomyRateRules')) {
+            response = await loadDataAutonomyRateRules(fileNameFormat);
+        } else if (fileName.startsWith('rtasRates')) {
+            response = await loadDataRtaRateRules(fileNameFormat);
         }
         res.json({
             status: true,
@@ -41,20 +31,6 @@ app.post('/api/rules', async (req, res) => {
     }
 });
 
-// Rutas
-app.get('/api/rules/find', async (req, res) => {
-    try {
-        const tasas = await rules.find();
-        res.json({
-            status: true,
-            data: tasas
-        });
-    } catch (error) {
-        res.status(500).json({ status: false, error: error.message });
-    }
-});
-
-// Iniciar el servidor
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });

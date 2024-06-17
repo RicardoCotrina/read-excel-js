@@ -1,14 +1,7 @@
-const fs = require('fs');
-const XLSX = require('xlsx');
-const Rule = require('../models/rules');
+import { getDataByFile, generateScript } from '../utils/index.js';
 
-// Función para cargar datos desde el archivo Excel e insertar en MongoDB
-const loadDataRangeRateRules = async (rutaArchivo) => {
-    const workbook = XLSX.readFile(rutaArchivo);
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet);
-
+export const loadDataRangeRateRules = async (fileName) => {
+    const data = await getDataByFile(fileName);
     const rulesTotal = data.map((row, index) => {
         const montoCCA = row['MONTO CCA'] === 'ANYVALUE' ? 'ANY' : (row['MONTO CCA'].toString().indexOf('between') !== -1) ? 'BETWEEN' : '>=';
         const operatorPlazo = row['PLAZO'] === 'ANYVALUE' ? 'ANY' : (row['PLAZO'].toString().indexOf('<') !== -1) ? '<' : (row['PLAZO'].toString().indexOf('>=') !== -1) ? '>=' : (row['PLAZO'].toString().indexOf('<=') !== -1) ? '<=' : '>';
@@ -23,9 +16,9 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
                     { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
-                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA']).toFixed(2) },
-                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO']).toFixed(2) },
-                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA']).toFixed(2) }
+                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA'].toFixed(2)) },
+                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO'].toFixed(2)) },
+                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA'].toFixed(2)) }
                 ]
             }
         } else if (montoCCA === 'BETWEEN') {
@@ -38,9 +31,9 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
                     { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
-                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA']).toFixed(2) },
-                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO']).toFixed(2) },
-                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA']).toFixed(2) }
+                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA'].toFixed(2)) },
+                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO'].toFixed(2)) },
+                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA'].toFixed(2)) }
                 ]
             }
         } else if (montoCCA === '>=') {
@@ -53,9 +46,9 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
                     { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
-                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA']).toFixed(2) },
-                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO']).toFixed(2) },
-                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA']).toFixed(2) }
+                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA'].toFixed(2)) },
+                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO'].toFixed(2)) },
+                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA'].toFixed(2)) }
                 ]
             }
         }
@@ -79,17 +72,7 @@ const loadDataRangeRateRules = async (rutaArchivo) => {
 
     const jsonData = JSON.stringify(resultArray, null, 2);
 
-    //const ruleName = await Rule.findOne({ name: resultArray.name }).select(['-_id', '-__v']);
+    await generateScript(fileName, jsonData);
 
-    // if (ruleName) {
-    //     return ruleName;
-    // }
-
-    // Insertar los datos en la colección de MongoDB
-    //await Rule.insertMany(resultArray);
-
-    fs.writeFileSync('output/scriptInsertRangeRateRules.json', jsonData);
     return resultArray;
 };
-
-module.exports = loadDataRangeRateRules;
