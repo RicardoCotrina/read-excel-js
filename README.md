@@ -11,6 +11,9 @@ Los nombres de la cabecera no deben contener guín abajo ( ```_``` ) sino estar 
 
 ![alt text](public/images/cabeceras_example.png)
 
+Para las tasas de rango las columnas de salida TASA MINIMA, TASA PROMEDIO y TASA MÁXIMA, dentro del excel deben estar con formato 'General' y no en 'Contabilidad'.
+![alt text](public/images/cabeceras_formato_range_rate.png)
+
 ## TERCERA CONSIDERACIÓN
 Copiar el archivo ```.env.example``` a ```.env```.
 
