@@ -3,6 +3,7 @@ import { getDataByFile, generateScript } from '../utils/index.js';
 export const loadDataRangeRateRules = async (fileName) => {
     const data = await getDataByFile(fileName);
     const rulesTotal = data.map((row, index) => {
+        console.log('index: ', index, row)
         const montoCCA = row['MONTO CCA'] === 'ANYVALUE' ? 'ANY' : (row['MONTO CCA'].toString().indexOf('between') !== -1) ? 'BETWEEN' : '>=';
         const operatorPlazo = row['PLAZO'] === 'ANYVALUE' ? 'ANY' : (row['PLAZO'].toString().indexOf('<') !== -1) ? '<' : (row['PLAZO'].toString().indexOf('>=') !== -1) ? '>=' : (row['PLAZO'].toString().indexOf('<=') !== -1) ? '<=' : '>';
 
@@ -16,9 +17,9 @@ export const loadDataRangeRateRules = async (fileName) => {
                     { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
-                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA'].toFixed(2)) },
-                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO'].toFixed(2)) },
-                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA'].toFixed(2)) }
+                    { name: 'TASA_MINIMA', value: Number((row['TASA MINIMA'] ?? row[' TASA MINIMA ']).toFixed(2)) },
+                    { name: 'TASA_PROMEDIO', value: Number((row['TASA PROMEDIO'] ?? row[' TASA PROMEDIO ']).toFixed(2)) },
+                    { name: 'TASA_MAXIMA', value: Number((row['TASA MÁXIMA'] ?? row[' TASA MÁXIMA ']).toFixed(2)) }
                 ]
             }
         } else if (montoCCA === 'BETWEEN') {
@@ -31,9 +32,9 @@ export const loadDataRangeRateRules = async (fileName) => {
                     { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
-                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA'].toFixed(2)) },
-                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO'].toFixed(2)) },
-                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA'].toFixed(2)) }
+                    { name: 'TASA_MINIMA', value: Number((row['TASA MINIMA'] ?? row[' TASA MINIMA ']).toFixed(2)) },
+                    { name: 'TASA_PROMEDIO', value: Number((row['TASA PROMEDIO'] ?? row[' TASA PROMEDIO ']).toFixed(2)) },
+                    { name: 'TASA_MAXIMA', value: Number((row['TASA MÁXIMA'] ?? row[' TASA MÁXIMA ']).toFixed(2)) }
                 ]
             }
         } else if (montoCCA === '>=') {
@@ -46,9 +47,9 @@ export const loadDataRangeRateRules = async (fileName) => {
                     { name: 'PLAZO', operator: operatorPlazo, value: row['PLAZO'] === 'ANYVALUE' ? 0 : Number(row['PLAZO'].toString().match(/\d+(\.\d+)?/g)[0]) }
                 ],
                 results: [
-                    { name: 'TASA_MINIMA', value: Number(row['TASA MINIMA'].toFixed(2)) },
-                    { name: 'TASA_PROMEDIO', value: Number(row['TASA PROMEDIO'].toFixed(2)) },
-                    { name: 'TASA_MAXIMA', value: Number(row['TASA MÁXIMA'].toFixed(2)) }
+                    { name: 'TASA_MINIMA', value: Number((row['TASA MINIMA'] ?? row[' TASA MINIMA ']).toFixed(2)) },
+                    { name: 'TASA_PROMEDIO', value: Number((row['TASA PROMEDIO'] ?? row[' TASA PROMEDIO ']).toFixed(2)) },
+                    { name: 'TASA_MAXIMA', value: Number((row['TASA MÁXIMA'] ?? row[' TASA MÁXIMA ']).toFixed(2)) }
                 ]
             }
         }
