@@ -3,7 +3,7 @@ import { getDataByFile, generateScript } from '../utils/index.js';
 export const loadDataRangeRateRules = async (fileName) => {
     const data = await getDataByFile(fileName);
     const rulesTotal = data.map((row, index) => {
-        console.log('index: ', index, row)
+        console.log('Row document => ', index, JSON.stringify(row));
         const montoCCA = row['MONTO CCA'] === 'ANYVALUE' ? 'ANY' : (row['MONTO CCA'].toString().indexOf('between') !== -1) ? 'BETWEEN' : '>=';
         const operatorPlazo = row['PLAZO'] === 'ANYVALUE' ? 'ANY' : (row['PLAZO'].toString().indexOf('<') !== -1) ? '<' : (row['PLAZO'].toString().indexOf('>=') !== -1) ? '>=' : (row['PLAZO'].toString().indexOf('<=') !== -1) ? '<=' : '>';
 

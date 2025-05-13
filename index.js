@@ -1,6 +1,6 @@
 // index.js
 import express, { json } from 'express';
-import { loadDataAutonomyRateRules, loadDataRangeRateRules, loadDataRtaRateRules } from './services/index.js';
+import { insuranceRateRules, loadDataAutonomyRateRules, loadDataRangeRateRules, loadDataRtaRateRules } from './services/index.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +21,8 @@ app.post('/api/rules', async (req, res) => {
             response = await loadDataAutonomyRateRules(fileNameFormat);
         } else if (fileName.startsWith('rtasRates')) {
             response = await loadDataRtaRateRules(fileNameFormat);
+        } else if (fileName.startsWith('insuranceRules')) {
+            response = await insuranceRateRules(fileNameFormat);
         }
         res.json({
             status: true,
